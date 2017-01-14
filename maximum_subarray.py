@@ -5,28 +5,34 @@ class Solution(object):
         :rtype: int
         """
         # time limit exceed
-        matrix = [[0 for x in range(len(nums))] for y in range(len(nums))]
-        # init
-        for i in range(len(nums)):
-            matrix[i][i] = nums[i]
+        # O(n^2) solution
+        n = len(nums)
+        f = [0 for y in range(n)]
 
-        if len(nums) == 1:
-            return nums[0]
+        res = -float('inf')
+        for i in range(n):
+            for j in range(n-i):
+                if j <1:
+                    f[j] = nums[i]
+                else:
+                    f[j] = f[j-1]+nums[i+j]
 
-        #
-        for i in range(len(nums)):
-            for j in range(i, len(nums)):
-                matrix[i][j] = matrix[i][j - 1] + nums[j]
+                res = max(res,f[j])
+        return res
 
-        for i, list in enumerate(matrix):
-            matrix[i] = list[i:]
+    def maxSubArray2(self,nums):
+        # O(n) solution
+        n = len(nums)
+        f = [0 for y in range(n)]
+        f[0] = nums[0]
 
-        ans = []
-        for list in matrix:
-            for i in list:
-                ans.append(i)
+        res = f[0]
 
-        return max(ans)
+        for i in range(1,n):
+            f[i] = nums[i] + (f[i-1] if f[i-1] > 0 else 0)
+            res = max(res,f[i])
+
+        return res
 
 if __name__ == '__main__':
-    print(Solution().maxSubArray([1]))
+    print(Solution().maxSubArray2([-2,1,-3,4,-1,2,1,-5,4]))
